@@ -9,6 +9,7 @@ export const createRecipe = /* GraphQL */ `
     createRecipe(input: $input, condition: $condition) {
       id
       name
+      category
       description
       createdAt
       updatedAt
@@ -23,6 +24,7 @@ export const updateRecipe = /* GraphQL */ `
     updateRecipe(input: $input, condition: $condition) {
       id
       name
+      category
       description
       createdAt
       updatedAt
@@ -37,6 +39,7 @@ export const deleteRecipe = /* GraphQL */ `
     deleteRecipe(input: $input, condition: $condition) {
       id
       name
+      category
       description
       createdAt
       updatedAt

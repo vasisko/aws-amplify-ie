@@ -3,9 +3,9 @@ import API from '@aws-amplify/api';
 import './App.css';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { listRecipes } from './graphql/queries';
-import { createRecipe as createRecipeMutation } from './graphql/mutations';
+import { createRecipe as createRecipeMutation, deleteRecipe as deleteRecipeMutation } from './graphql/mutations';
 
-const initialFormState = { name: '', description: '' };
+const initialFormState = { name: '', category: '', description: '' };
 
 function App() {
   const [recipes, setRecipes] = useState([]);
@@ -30,6 +30,12 @@ function App() {
     console.log('here 1: create')
   }
 
+  async function deleteRecipe({id}) {
+    const newRecipeArray = recipes.filter(recipe => recipe.id !== id);
+    setRecipes(newRecipeArray);
+    await API.graphql({query: deleteRecipeMutation, variables: {input: {id} }});
+
+  }
   return (
     <div className="App">
       <header className="App-header">
@@ -44,6 +50,11 @@ function App() {
           value={formData.name}
         />
         <input
+        onChange={e => setFormData({ ...formData, 'category': e.target.value})}
+        placeholder="Recipe Category"
+        value={formData.category}
+      />
+        <input
           onChange={e => setFormData({ ...formData, 'description': e.target.value})}
           placeholder="Recipe Description"
           value={formData.description}
@@ -54,8 +65,10 @@ function App() {
           {
             recipes.map(recipe => (
               <div key={recipe.id || recipe.name} >
-                <h4>{recipe.name}</h4>
+                <p> -------------------------- </p>
+                <p>{recipe.name}: {recipe.category}</p>
                 <p>{recipe.description}</p>
+                <button onClick={() => deleteRecipe(recipe)}><i>delete recipe</i></button>
               </div>
             ))
           }
