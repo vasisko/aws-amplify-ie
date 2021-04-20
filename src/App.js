@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
+import API from '@aws-amplify/api';
 import './App.css';
 import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
 import { listRecipes } from './graphql/queries';
@@ -21,10 +21,10 @@ function App() {
       console.log('data', apiData.data.listRecipes.items)
   }
   async function createRecipe() {
-    if(!formData.name || !formData.desciption) return;
-    console.log('here 0: create')
-    // await API.graphql({query: createRecipeMutation, variables: {input: formData} });
-    await API.graphql(graphqlOperation(createRecipeMutation, {input: formData}));
+    if(!formData.name || !formData.description) return;
+    console.log(formData)
+    await API.graphql({query: createRecipeMutation, variables: {input: formData} });
+    //await API.graphql(graphqlOperation(createRecipeMutation, {input: formData}));
     setRecipes([ ...recipes, formData ]);
     setFormData(initialFormState);
     console.log('here 1: create')
@@ -50,11 +50,12 @@ function App() {
         />  
         <button onClick={createRecipe}>Create Recipe</button> 
         <div style={{marginBottom: 30 }}>
+          <p>Recipe List</p>
           {
             recipes.map(recipe => (
               <div key={recipe.id || recipe.name} >
-                <h2>recipe.name</h2>
-                <p>recipe.description</p><br /><br />
+                <h4>{recipe.name}</h4>
+                <p>{recipe.description}</p>
               </div>
             ))
           }
